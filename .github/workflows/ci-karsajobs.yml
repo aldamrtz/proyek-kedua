@@ -1,60 +1,62 @@
-# .github/workflows/ci-karsajobs.yml
-name: CI - Karsajobs
+name: CI for karsajobs
 
 on:
   push:
     branches:
       - karsajobs
-  pull_request:
-    branches:
-      - karsajobs
 
 jobs:
-  backend:
+  lint-dockerfile:
     runs-on: ubuntu-latest
-
     steps:
-      # 1. Checkout code
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-      # 2. Set up Go
-      - name: Set up Go
-        uses: actions/setup-go@v4
+      - name: Install hadolint
+        run: |
+          sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.7.0/hadolint-Linux-x86_64
+          sudo chmod +x /bin/hadolint
+
+      - name: Lint Dockerfile
+        run: hadolint karsajobs/Dockerfile
+
+  test-app:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set Up Go
+        uses: actions/setup-go@v2
         with:
           go-version: 1.15
 
-      # 3. Lint Dockerfile
-      - name: Lint Dockerfile
+      - name: Install Dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y hadolint
-          hadolint karsajobs/Dockerfile
+          cd karsajobs
+          go mod download
 
-      # 4. Download Go modules
-      - name: Go modules
-        run: go mod download
-        working-directory: ./karsajobs
-
-      # 5. Run unit tests
-      - name: Run backend tests
-        run: go test -v -short --count=1 ./...
-        working-directory: ./karsajobs
-
-      # 6. Build Docker image
-      - name: Build Docker image
+      - name: Run Unit Tests
         run: |
-          docker build -t ghcr.io/${{ github.repository_owner }}/a433-microservices/karsajobs:latest karsajobs
+          cd karsajobs
+          go test -v -short --count=1 $(go list ./...)
 
-      # 7. Log in to GitHub Packages
-      - name: Log in to GitHub Packages
-        uses: docker/login-action@v2
+  build-app-karsajobs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set Up Go
+        uses: actions/setup-go@v2
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          go-version: 1.15
 
-      # 8. Push Docker image
-      - name: Push Docker image
+      - name: Build and Push Docker Image
+        env:
+          GHCR_PAT: ${{ secrets.GHCR_PAT }}
         run: |
-          docker push ghcr.io/${{ github.repository_owner }}/a433-microservices/karsajobs:latest
+          echo $GHCR_PAT | docker login ghcr.io -u aldamrtz --password-stdin
+          docker build -t aldaaa/karsajobs:latest -f karsajobs/Dockerfile karsajobs
+          docker tag aldaaa/karsajobs:latest ghcr.io/aldamrtz/a433-microservices/karsajobs:latest
+          docker push ghcr.io/aldamrtz/a433-microservices/karsajobs:latest
