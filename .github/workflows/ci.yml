@@ -1,0 +1,31 @@
+name: CI KarsaJobs UI
+
+on:
+  push:
+    branches: [ "karsajobs-ui" ]
+  pull_request:
+    branches: [ "karsajobs-ui" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Lint Dockerfile
+        run: |
+          sudo wget -O /usr/local/bin/hadolint https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-x86_64
+          sudo chmod +x /usr/local/bin/hadolint
+          hadolint Dockerfile
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build app
+        run: npm run build
