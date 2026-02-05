@@ -1,0 +1,6 @@
+[submodule "karsajobs"]
+	path = karsajobs
+	url = https://github.com/aldamrtz/a433-microservices/tree/karsajobs
+[submodule "karsajobs-ui"]
+	path = karsajobs-ui
+	url = https://github.com/aldamrtz/a433-microservices/tree/karsajobs-ui
