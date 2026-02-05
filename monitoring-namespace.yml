@@ -1,0 +1,9 @@
+# Versi API yang digunakan dalam konfigurasi
+apiVersion: v1
+
+# Jenis objek yang akan dibuat
+kind: Namespace
+
+# Metadata untuk objek Namespace
+metadata:
+  name: monitoring

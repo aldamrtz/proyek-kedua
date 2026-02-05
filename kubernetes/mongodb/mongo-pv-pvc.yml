@@ -1,0 +1,65 @@
+# =====================================================
+# PersistentVolume (PV)
+# Digunakan untuk menyediakan storage fisik di cluster
+# =====================================================
+
+# Versi API untuk resource PersistentVolume
+apiVersion: v1
+
+# Jenis resource yang dibuat: PersistentVolume
+kind: PersistentVolume
+
+# Metadata berisi informasi identitas resource
+metadata:
+  name: mongo-pv # Nama PersistentVolume
+
+# Spesifikasi konfigurasi PersistentVolume
+spec:
+  # Kapasitas storage yang disediakan
+  capacity:
+    storage: 5Gi # Ukuran penyimpanan: 5 Gigabyte
+
+  # Mode akses volume
+  accessModes:
+    - ReadWriteOnce # Hanya bisa dibaca & ditulis oleh 1 node
+
+  # Kebijakan saat PVC dihapus
+  persistentVolumeReclaimPolicy: Retain
+  # Retain = data tidak ikut terhapus
+
+  # StorageClass yang digunakan
+  storageClassName: manual
+
+  # Tipe storage: hostPath (disimpan di node Minikube)
+  hostPath:
+    path: /data/mongo # Lokasi folder di VM Minikube
+
+---
+# =====================================================
+# PersistentVolumeClaim (PVC)
+# Digunakan untuk meminta storage dari PV
+# =====================================================
+
+# Versi API untuk resource PersistentVolumeClaim
+apiVersion: v1
+
+# Jenis resource yang dibuat: PersistentVolumeClaim
+kind: PersistentVolumeClaim
+
+# Metadata PVC
+metadata:
+  name: mongo-pvc # Nama PersistentVolumeClaim
+
+# Spesifikasi permintaan storage
+spec:
+  # Mode akses yang diminta
+  accessModes:
+    - ReadWriteOnce # Sama seperti PV
+
+  # Kapasitas storage yang diminta
+  resources:
+    requests:
+      storage: 5Gi # Minta 5 Gigabyte
+
+  # StorageClass yang digunakan
+  storageClassName: manual

@@ -1,0 +1,40 @@
+# Versi API untuk objek Deployment
+apiVersion: apps/v1
+
+# Jenis objek yang akan dibuat
+kind: Deployment
+
+# Metadata untuk objek Deployment, termasuk nama objeknya
+metadata:
+  name: karsajobs-ui-deployment # Nama Deployment
+
+# Spesifikasi untuk Deployment, termasuk konfigurasi jumlah replika
+spec:
+  replicas: 2 # Jumlah replika yang akan dibuat
+
+  # Selektor untuk menentukan pod mana yang termasuk dalam Deployment
+  selector:
+    matchLabels:
+      app: karsajobs-ui # Label yang digunakan untuk memilih pod
+
+  # Template untuk pod yang akan dibuat oleh Deployment
+  template:
+    metadata:
+      labels:
+        app: karsajobs-ui # Label yang diberikan pada pod
+    spec:
+      # Kontainer yang akan berjalan dalam pod
+      containers:
+        - name: karsajobs-ui # Nama kontainer
+
+          # Gambar Docker yang akan digunakan untuk kontainer
+          image: ghcr.io/aldamrtz/a433-microservices/karsajobs-ui:latest
+
+          # Port yang akan diteruskan dari kontainer ke pod
+          ports:
+            - containerPort: 8000 # Port yang diexpose oleh kontainer
+
+          # Environment variables yang akan diatur dalam kontainer
+          env:
+            - name: VUE_APP_BACKEND
+              value: "http://127.0.0.1:57222" # URL backend yang akan digunakan oleh aplikasi Vue.js
