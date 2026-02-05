@@ -1,0 +1,55 @@
+# PersistentVolume
+# Versi API untuk objek PersistentVolume
+apiVersion: v1
+
+# Jenis objek yang akan dibuat
+kind: PersistentVolume
+
+# Metadata untuk objek PersistentVolume, termasuk nama objeknya
+metadata:
+  name: mongo-pv # Nama PersistentVolume
+
+# Spesifikasi untuk PersistentVolume
+spec:
+  # Kapasitas penyimpanan yang dialokasikan untuk PersistentVolume
+  capacity:
+    storage: 5Gi # Kapasitas penyimpanan
+
+  # Mode akses yang diizinkan untuk PersistentVolume
+  accessModes:
+    - ReadWriteOnce # Hanya satu node dapat memiliki akses baca-tulis pada suatu waktu
+
+  # Kebijakan pemulihan PersistentVolume setelah di-claim
+  persistentVolumeReclaimPolicy: Retain
+
+  # Kelas penyimpanan yang akan digunakan untuk PersistentVolume
+  storageClassName: manual
+
+  # Tipe penyimpanan dan path pada host yang akan digunakan untuk PersistentVolume
+  hostPath:
+    path: /data/mongo # Path pada host filesystem yang akan digunakan untuk penyimpanan PersistentVolume
+
+# PersistentVolumeClaim
+# Versi API untuk objek PersistentVolumeClaim, menggunakan API versi 1
+apiVersion: v1
+
+# Jenis objek yang akan dibuat, dalam hal ini adalah "PersistentVolumeClaim"
+kind: PersistentVolumeClaim
+
+# Metadata untuk objek PersistentVolumeClaim, termasuk nama objeknya
+metadata:
+  name: mongo-pvc # Nama PersistentVolumeClaim
+
+# Spesifikasi untuk PersistentVolumeClaim
+spec:
+  # Mode akses yang diizinkan untuk PersistentVolumeClaim
+  accessModes:
+    - ReadWriteOnce # Hanya satu node dapat memiliki akses baca-tulis pada suatu waktu
+
+  # Sumber daya yang diminta oleh PersistentVolumeClaim
+  resources:
+    requests:
+      storage: 5Gi # Permintaan kapasitas penyimpanan sebesar 5 gigabyte
+
+  # Kelas penyimpanan yang akan digunakan untuk PersistentVolumeClaim
+  storageClassName: manual

@@ -1,0 +1,11 @@
+Github repository karsajobs: https://github.com/Aldaaaaa/a433-microservices/tree/karsajobs
+
+Github repository karsajobs-ui: https://github.com/Aldaaaaa/a433-microservices/tree/karsajobs-ui
+
+GitHub Packages karsajobs: https://github.com/users/Aldaaaaa/packages/container/package/a433-microservices/karsajobs
+
+GitHub Packages karsajobs-ui: https://github.com/users/Aldaaaaa/packages/container/package/a433-microservices/karsajobs-ui
+
+Github action karsajobs: https://github.com/Aldaaaaa/a433-microservices/actions/runs/6842522054
+
+Github action karsajobs-ui: https://github.com/Aldaaaaa/a433-microservices/actions/runs/6842534253
